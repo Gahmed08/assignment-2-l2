@@ -1,0 +1,85 @@
+import { Request, Response } from 'express';
+import { ProductServices } from './product.service';
+import productZodSchema from './productValidation';
+
+const createProduct = async (req: Request, res: Response) => {
+  try {
+    const { product: productData } = req.body;
+
+    // const zodPasreData = productZodSchema.parse(productData);
+
+    const result = await ProductServices.createProductIntoDB(productData);
+    res.status(200).json({
+      success: true,
+      message: 'Product is Crested Succesfuly',
+      data: result,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Somthing went wrong',
+      data: err,
+    });
+  }
+};
+
+const getAllProduct = async (req: Request, res: Response) => {
+  try {
+    const result = await ProductServices.getAllProductFromDB();
+    res.status(200).json({
+      success: true,
+      message: 'All product retrive succesfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'Somthing Went Wrong',
+      error: err,
+    });
+  }
+};
+
+const getSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+
+    const result = await ProductServices.getSingleProductFromDB(productId);
+    res.status(200).json({
+      success: true,
+      message: 'Product is retrieved succesfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      massage: err.message || 'Somthing Went Wrong',
+      error: err,
+    });
+  }
+};
+const updateSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+
+    await ProductServices.updateSingleProductOfDB(productId);
+    const result = await ProductServices.getSingleProductFromDB(productId);
+    res.status(200).json({
+      success: true,
+      message: 'Product is updated succesfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      massage: err.message || 'Somthing Went Wrong',
+      error: err,
+    });
+  }
+};
+export const ProductControler = {
+  createProduct,
+  getAllProduct,
+  getSingleProduct,
+  updateSingleProduct,
+};
