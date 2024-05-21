@@ -77,9 +77,31 @@ const updateSingleProduct = async (req: Request, res: Response) => {
     });
   }
 };
+
+const deleteSingleProduct = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+
+    await ProductServices.deleteProductFromDB(productId);
+    const result = await ProductServices.getSingleProductFromDB(productId);
+    res.status(200).json({
+      success: true,
+      message: 'Product is Deleted succesfully',
+      data: result,
+    });
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      massage: err.message || 'Somthing Went Wrong',
+      error: err,
+    });
+  }
+};
+
 export const ProductControler = {
   createProduct,
   getAllProduct,
   getSingleProduct,
   updateSingleProduct,
+  deleteSingleProduct,
 };
