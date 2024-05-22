@@ -17,7 +17,10 @@ const getSingleProductFromDB = async (id: string) => {
 };
 
 const updateSingleProductOfDB = async (id: string) => {
-  const result = await Product.updateOne({ _id: id }, { name: 'Shamon' });
+  const result = await Product.updateOne(
+    { _id: id },
+    { $set: { name: 'Shamon' } },
+  );
   return result;
 };
 
