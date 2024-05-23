@@ -10,16 +10,16 @@ app.use(cors());
 app.use('/api', ProductRoute);
 app.use('/api', OrderRoute);
 
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({
+    message: 'Welcome to HULUFI API service',
+  });
+});
+
 app.use((req: Request, res: Response) => {
   res.status(400).json({
     success: false,
     message: 'Router not found',
-  });
-});
-
-app.get('/', (req: Request, res: Response) => {
-  res.status(200).json({
-    message: 'Welcome to HULUFI API service',
   });
 });
 
