@@ -11,7 +11,7 @@ const createProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.createProductIntoDB(productData);
     res.status(200).json({
       success: true,
-      message: 'Product is Crested Succesfuly',
+      message: 'Product created successfully!',
       data: result,
     });
   } catch (err) {
@@ -24,13 +24,23 @@ const createProduct = async (req: Request, res: Response) => {
 };
 
 const getAllProduct = async (req: Request, res: Response) => {
+  const searchTerm: string = req.query.name as string;
+  console.log(searchTerm);
   try {
-    const result = await ProductServices.getAllProductFromDB();
-    res.status(200).json({
-      success: true,
-      message: 'All product retrive succesfully',
-      data: result,
-    });
+    const result = await ProductServices.getAllProductFromDB(searchTerm);
+    if (searchTerm && result) {
+      res.status(200).json({
+        success: true,
+        message: `Products matching search term '${searchTerm}' fetched successfully! `,
+        data: result,
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'Products fetched successfully!',
+        data: result,
+      });
+    }
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -47,7 +57,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.getSingleProductFromDB(productId);
     res.status(200).json({
       success: true,
-      message: 'Product is retrieved succesfully',
+      message: 'Products fetched successfully!',
       data: result,
     });
   } catch (err: any) {
@@ -66,7 +76,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.getSingleProductFromDB(productId);
     res.status(200).json({
       success: true,
-      message: 'Product is updated succesfully',
+      message: 'Product is updated successfully',
       data: result,
     });
   } catch (err: any) {
@@ -86,7 +96,7 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.getSingleProductFromDB(productId);
     res.status(200).json({
       success: true,
-      message: 'Product is Deleted succesfully',
+      message: 'Product is Deleted successfully',
       data: result,
     });
   } catch (err: any) {

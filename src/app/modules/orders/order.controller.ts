@@ -51,16 +51,24 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
-const getAllOrder = async (req: Request, res: Response): Promise<void> => {
-  const searchTerm = req.query.searchTerm as string;
-  console.log(searchTerm);
+const getAllOrder = async (req: Request, res: Response) => {
+  const searchTerm = req.query.email as string;
+
   try {
     const result = await orderServices.getAllOrderFromDB(searchTerm);
-    res.status(200).json({
-      success: true,
-      message: 'All order retrive succesfully',
-      data: result,
-    });
+
+    if (result.length === 0) {
+      res.status(500).json({
+        success: false,
+        message: 'Order not found',
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        message: 'Order fetched successfully!',
+        data: result,
+      });
+    }
   } catch (err: any) {
     res.status(500).json({
       success: false,
