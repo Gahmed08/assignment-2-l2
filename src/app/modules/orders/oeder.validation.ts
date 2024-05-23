@@ -3,7 +3,7 @@ import { z } from 'zod';
 const TZodOrder = z.object({
   email: z
     .string()
-    .email({ message: '{VALUE} is not a valid email' })
+    .email({ message: `{VALUE} is not a valid email` })
     .refine((value) => value.length > 0, { message: 'Email is required' }),
   productId: z.string().min(1, 'Product ID is required'),
   price: z
