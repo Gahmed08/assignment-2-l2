@@ -18,7 +18,9 @@ app.use((req: Request, res: Response) => {
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.status(200).json({
+    message: 'Welcome to HULUFI API service',
+  });
 });
 
 export default app;
