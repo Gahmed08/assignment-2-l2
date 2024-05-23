@@ -40,7 +40,7 @@ const getAllProduct = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err.message || 'Somthing Went Wrong',
@@ -54,7 +54,6 @@ const getSingleProduct = async (req: Request, res: Response) => {
     const { productId } = req.params;
 
     const result = await ProductServices.getSingleProductFromDB(productId);
-    console.log(result);
     res.status(200).json({
       success: true,
       message: 'Products fetched successfully!',
@@ -63,7 +62,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      massage: err.message || 'Somthing Went Wrong',
+      massage: 'Somthing Went Wrong',
       error: err,
     });
   }
@@ -82,7 +81,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(500).json({
       success: false,
-      massage: err.message || 'Somthing Went Wrong',
+      massage: 'Somthing Went Wrong',
       error: err,
     });
   }
@@ -102,7 +101,7 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      massage: error.message || 'Somthing Went Wrong',
+      massage: 'Somthing Went Wrong',
       error: error,
     });
   }

@@ -13,7 +13,9 @@ const createOrder = async (req: Request, res: Response) => {
     const producID = productData?._id.toString();
 
     if (orderId === producID) {
-      const productQuantity = parseInt(productData?.inventory?.quantity);
+      const productQunt = productData?.inventory?.quantity;
+      const quantityStr = productQunt !== undefined ? String(productQunt) : '0';
+      const productQuantity = parseInt(quantityStr);
       const orderQuntaty = parseInt(orderData.quantity);
       if (orderQuntaty > productQuantity) {
         res.status(500).json({
@@ -69,7 +71,7 @@ const getAllOrder = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       success: false,
       message: err.message || 'Somthing Went Wrong',
