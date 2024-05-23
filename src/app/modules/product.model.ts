@@ -13,7 +13,7 @@ const variantSchema = new Schema<TVariant>({
 });
 
 const inventorySchema = new Schema<TInventory>({
-  quantity: String,
+  quantity: Number,
   inStock: Boolean,
 });
 

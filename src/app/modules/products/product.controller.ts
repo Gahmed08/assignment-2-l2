@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
-import productZodSchema from './productValidation';
+import productZodvalidationSchema from './productValidation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const { product: productData } = req.body;
 
-    // const zodPasreData = productZodSchema.parse(productData);
+    const zodPasreData = productZodvalidationSchema.parse(productData);
 
-    const result = await ProductServices.createProductIntoDB(productData);
+    const result = await ProductServices.createProductIntoDB(zodPasreData);
     res.status(200).json({
       success: true,
       message: 'Product created successfully!',
@@ -25,7 +25,6 @@ const createProduct = async (req: Request, res: Response) => {
 
 const getAllProduct = async (req: Request, res: Response) => {
   const searchTerm: string = req.query.name as string;
-  console.log(searchTerm);
   try {
     const result = await ProductServices.getAllProductFromDB(searchTerm);
     if (searchTerm && result) {
@@ -41,7 +40,7 @@ const getAllProduct = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       message: err.message || 'Somthing Went Wrong',
@@ -60,7 +59,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
       message: 'Products fetched successfully!',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       massage: err.message || 'Somthing Went Wrong',
@@ -79,7 +78,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
       message: 'Product is updated successfully',
       data: result,
     });
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
       massage: err.message || 'Somthing Went Wrong',
@@ -99,11 +98,11 @@ const deleteSingleProduct = async (req: Request, res: Response) => {
       message: 'Product is Deleted successfully',
       data: result,
     });
-  } catch (err: any) {
+  } catch (error) {
     res.status(500).json({
       success: false,
-      massage: err.message || 'Somthing Went Wrong',
-      error: err,
+      massage: error.message || 'Somthing Went Wrong',
+      error: error,
     });
   }
 };
