@@ -24,7 +24,7 @@ const getSingleProductFromDB = async (id: string) => {
 const updateSingleProductOfDB = async (id: string) => {
   const result = await Product.updateOne(
     { _id: id },
-    { $set: { name: 'Shamon' } },
+    { $set: { 'inventory.quantity': 49 } },
   );
   return result;
 };
