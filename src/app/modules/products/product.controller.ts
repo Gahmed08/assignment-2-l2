@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productZodvalidationSchema from './productValidation';
+import { TProduct } from './product.interface';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
     const productData = req.body;
 
-    const zodPasreData: any = productZodvalidationSchema.safeParse(productData);
-    console.log(productData);
+    const zodPasreData = productZodvalidationSchema.safeParse(productData);
+    const validProductData = zodPasreData.data as TProduct;
 
-    const result = await ProductServices.createProductIntoDB(zodPasreData.data);
+    const result = await ProductServices.createProductIntoDB(validProductData);
     res.status(200).json({
       success: true,
       message: 'Product created successfully!',
@@ -41,10 +42,10 @@ const getAllProduct = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Somthing Went Wrong',
+      message: 'Somthing Went Wrong',
       error: err,
     });
   }

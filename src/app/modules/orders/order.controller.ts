@@ -71,10 +71,10 @@ const getAllOrder = async (req: Request, res: Response) => {
         data: result,
       });
     }
-  } catch (err: any) {
+  } catch (err) {
     res.status(500).json({
       success: false,
-      message: err.message || 'Somthing Went Wrong',
+      message: 'Somthing Went Wrong',
       error: err,
     });
   }
