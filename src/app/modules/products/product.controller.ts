@@ -29,7 +29,8 @@ const getAllProduct = async (req: Request, res: Response) => {
   const searchTerm: string = req.query.name as string;
   try {
     const result = await ProductServices.getAllProductFromDB(searchTerm);
-    if (searchTerm && result) {
+
+    if (searchTerm && result.length > 0) {
       res.status(200).json({
         success: true,
         message: `Products matching search term '${searchTerm}' fetched successfully! `,
@@ -37,8 +38,8 @@ const getAllProduct = async (req: Request, res: Response) => {
       });
     } else {
       res.status(200).json({
-        success: true,
-        message: 'Products fetched successfully!',
+        success: false,
+        message: `Product of this name ${searchTerm}  is not there!`,
         data: result,
       });
     }
