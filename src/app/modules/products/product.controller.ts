@@ -4,11 +4,12 @@ import productZodvalidationSchema from './productValidation';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const { product: productData } = req.body;
+    const productData = req.body;
 
-    const zodPasreData = productZodvalidationSchema.parse(productData);
+    const zodPasreData: any = productZodvalidationSchema.safeParse(productData);
+    console.log(productData);
 
-    const result = await ProductServices.createProductIntoDB(zodPasreData);
+    const result = await ProductServices.createProductIntoDB(zodPasreData.data);
     res.status(200).json({
       success: true,
       message: 'Product created successfully!',
