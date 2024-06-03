@@ -1,13 +1,15 @@
 import { Product } from '../product.model';
 import { ProductServices } from '../products/product.service';
 import TZodOrder from './oeder.validation';
+import { TOrder } from './order.interface';
 import { orderServices } from './order.services';
 import { Request, Response } from 'express';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const { orders: orderData } = req.body;
-    const zodPasreData = TZodOrder.parse(orderData);
+    const orderData = req.body;
+    const zodPasreData = TZodOrder.safeParse(orderData);
+    const validOrderData = zodPasreData.data as TOrder;
     const orderId = orderData.productId;
     const productData = await ProductServices.getSingleProductFromDB(orderId);
     const producID = productData?._id.toString();
@@ -36,7 +38,7 @@ const createOrder = async (req: Request, res: Response) => {
           { new: true },
         );
 
-        const result = await orderServices.createOrderIntoDB(zodPasreData);
+        const result = await orderServices.createOrderIntoDB(validOrderData);
         res.status(200).json({
           success: true,
           message: 'Order is Crested Succesfuly',
