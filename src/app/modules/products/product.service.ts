@@ -21,11 +21,13 @@ const getSingleProductFromDB = async (id: string) => {
   return result;
 };
 
-const updateSingleProductOfDB = async (id: string) => {
-  const result = await Product.updateOne(
-    { _id: id },
-    { $set: { 'inventory.quantity': 100 } },
-  );
+const updateSingleProductOfDB = async (
+  id: string,
+  payload: Partial<TProduct>,
+) => {
+  const result = await Product.findByIdAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
   return result;
 };
 
