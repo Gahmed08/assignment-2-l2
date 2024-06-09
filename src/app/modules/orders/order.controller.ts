@@ -1,24 +1,24 @@
 import { Product } from '../product.model';
 import { ProductServices } from '../products/product.service';
 import TZodOrder from './oeder.validation';
-import { TOrder } from './order.interface';
 import { orderServices } from './order.services';
 import { Request, Response } from 'express';
 
 const createOrder = async (req: Request, res: Response) => {
   try {
-    const orderData = req.body;
-    const zodPasreData = TZodOrder.safeParse(orderData);
-    const validOrderData = zodPasreData.data as TOrder;
-    const orderId = orderData.productId;
+    const zodPasreData = await TZodOrder.parseAsync({
+      body: req.body,
+    });
+
+    const orderId = zodPasreData.body.productId;
+
     const productData = await ProductServices.getSingleProductFromDB(orderId);
     const producID = productData?._id.toString();
 
     if (orderId === producID) {
-      const productQunt = productData?.inventory?.quantity;
-      const quantityStr = productQunt !== undefined ? String(productQunt) : '0';
-      const productQuantity = parseInt(quantityStr);
-      const orderQuntaty = parseInt(orderData.quantity);
+      const productQuantity = productData?.inventory?.quantity as number;
+
+      const orderQuntaty = zodPasreData.body.quantity;
       if (orderQuntaty > productQuantity) {
         res.status(500).json({
           success: false,
@@ -38,7 +38,7 @@ const createOrder = async (req: Request, res: Response) => {
           { new: true },
         );
 
-        const result = await orderServices.createOrderIntoDB(validOrderData);
+        const result = await orderServices.createOrderIntoDB(zodPasreData.body);
         res.status(200).json({
           success: true,
           message: 'Order is Crested Succesfuly',

@@ -14,13 +14,15 @@ const inventorySchema = z.object({
 });
 
 const productZodvalidationSchema = z.object({
-  name: z.string().min(1, 'Name must be needed, please insert the name'),
-  description: z.string().min(1, 'Please provide some description'),
-  price: z.number().nonnegative('Price is missing, please add the price'),
-  category: z.string().min(1, 'Every Product have to have a category'),
-  tags: z.array(z.string()).min(1, 'Please add the tags'),
-  variants: variantSchema.optional(),
-  inventory: inventorySchema,
+  body: z.object({
+    name: z.string().min(1, 'Name must be needed, please insert the name'),
+    description: z.string().min(1, 'Please provide some description'),
+    price: z.number().nonnegative('Price is missing, please add the price'),
+    category: z.string().min(1, 'Every Product have to have a category'),
+    tags: z.array(z.string()).min(1, 'Please add the tags'),
+    variants: z.array(variantSchema),
+    inventory: inventorySchema,
+  }),
 });
 
 export default productZodvalidationSchema;

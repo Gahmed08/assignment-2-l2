@@ -1,16 +1,14 @@
 import { Request, Response } from 'express';
 import { ProductServices } from './product.service';
 import productZodvalidationSchema from './productValidation';
-import { TProduct } from './product.interface';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const productData = req.body;
+    const zodPasreData = await productZodvalidationSchema.parseAsync({
+      body: req.body,
+    });
 
-    const zodPasreData = productZodvalidationSchema.safeParse(productData);
-    const validProductData = zodPasreData.data as TProduct;
-
-    const result = await ProductServices.createProductIntoDB(validProductData);
+    const result = await ProductServices.createProductIntoDB(zodPasreData.body);
     res.status(200).json({
       success: true,
       message: 'Product created successfully!',
@@ -36,10 +34,16 @@ const getAllProduct = async (req: Request, res: Response) => {
         message: `Products matching search term '${searchTerm}' fetched successfully! `,
         data: result,
       });
+    } else if (searchTerm && result.length === 0) {
+      res.status(200).json({
+        success: true,
+        message: `All Product of this name ${searchTerm}  is not there!`,
+        data: result,
+      });
     } else {
       res.status(200).json({
-        success: false,
-        message: `Product of this name ${searchTerm}  is not there!`,
+        success: true,
+        message: `Products fetched successfully!`,
         data: result,
       });
     }
@@ -59,7 +63,7 @@ const getSingleProduct = async (req: Request, res: Response) => {
     const result = await ProductServices.getSingleProductFromDB(productId);
     res.status(200).json({
       success: true,
-      message: 'Products fetched successfully!',
+      message: 'Product fetched successfully!',
       data: result,
     });
   } catch (err) {

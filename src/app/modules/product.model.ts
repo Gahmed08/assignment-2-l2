@@ -39,7 +39,8 @@ const productSchema = new Schema<TProduct>({
     required: [true, 'Please add the tags'],
   },
   variants: {
-    type: variantSchema,
+    type: [variantSchema],
+    required: [true, 'Please add the variants'],
   },
   inventory: {
     type: inventorySchema,
